@@ -1,0 +1,47 @@
+Sub Copy_Files()
+    'Copies files from a network drive to a specified destination
+    'Directory paths need to be formatted with backslashes (\)
+
+    Dim i As Integer
+    Dim destinationPath As String
+    Dim fileName As String
+    
+    'This is the location to which all of the files will copy; use a trailing slash
+    'CHANGE THIS TO THE DESTINATION PATH YOU WOULD LIKE TO USE
+    'Note: if you receive a "Path/File access error" you will most likely need to use a path that to which Excel has write access
+    destinationPath = "C:\scripts\"
+   
+    'Start reading lines at row 2 since row 1 has instructions
+    i = 2
+    
+    'Loops through all rows until it finds an empty cell
+    While Not IsEmpty(Cells(i, 1))
+        
+        'Test to see if the files exists in remote location then copy or not
+        If Dir(Cells(i, 1)) <> "" Then
+        
+            'File exists
+            
+            'Get the file name based on the rightmost backslash
+            fileName = Right(Cells(i, 1), Len(Cells(i, 1)) - InStrRev(Cells(i, 1), "\"))
+            
+            'Copy the file to the "destinationPath" directory
+            FileCopy Cells(i, 1).Value, destinationPath & fileName
+            
+            'Highlight the cell in green to show it has been copied
+            Cells(i, 1).Interior.ColorIndex = 4
+        
+        Else
+        
+            'File does not exist
+            'Highlight cell in red
+            Cells(i, 1).Interior.ColorIndex = 3
+        
+        End If
+        
+        'Move to next row
+        i = i + 1
+    
+    Wend
+    
+End Sub
